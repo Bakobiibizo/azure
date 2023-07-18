@@ -12,7 +12,6 @@ class OpenAITextGeneration:
         pass
 
     def send_chat_complete(self, messages):
-        print(messages)
         try:
             response = openai.ChatCompletion.create(
                 model="gpt-4", messages=messages, stream=False

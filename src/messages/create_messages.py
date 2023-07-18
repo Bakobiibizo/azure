@@ -25,12 +25,26 @@ class CreateMessage(Message):
         print(f"Creating a Message instance: {Primer}")
         print(f"Creating a RoleOptions instance: {RoleOptions}")
 
-    def create_message(self, role: RoleOptions, content: StrictStr) -> Dict[str, str]:
+    def create_message(self, content: StrictStr, role=None) -> Dict[str, str]:
+        role = self.verify_role(role)
         return Message(role=role, content=content).model_dump()
 
     def create_primer(self, content: StrictStr) -> Dict[str, Dict[str, str]]:
         message = self.create_message(role=RoleOptions.SYSTEM, content=content)
         return Primer(title="primer", message=message).model_dump()
+
+    def verify_role(self, role):
+        try:
+            if not role:
+                role = RoleOptions.USER
+            if role == "user":
+                return RoleOptions.USER
+            if role == "assistant":
+                return RoleOptions.ASSISTANT
+            if role == "system":
+                return RoleOptions.SYSTEM
+        except Exception as e:
+            raise ValueError(f"Role {role} is not valid: {e}")
 
 
 def main():
