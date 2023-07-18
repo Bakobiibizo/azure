@@ -1,4 +1,3 @@
-from typing import Dict
 from enum import Enum
 from pydantic import BaseModel, StrictStr
 
@@ -15,7 +14,7 @@ class Message(BaseModel):
 
 
 class Primer(BaseModel):
-    message: Dict[str, str]
+    message: str
     title: str
 
 
@@ -25,31 +24,20 @@ class CreateMessage(Message):
         print(f"Creating a Message instance: {Primer}")
         print(f"Creating a RoleOptions instance: {RoleOptions}")
 
-    def create_message(self, content: StrictStr, role=None) -> Dict[str, str]:
+    def create_message(self, role, content: StrictStr, ) -> str:
         role = self.verify_role(role)
-        return Message(role=role, content=content).model_dump()
+        return Message(role=role, content=content).model_dump_json()
 
-    def create_primer(self, content: StrictStr) -> Dict[str, Dict[str, str]]:
+    def create_primer(self, content: StrictStr) -> str:
         message = self.create_message(role=RoleOptions.SYSTEM, content=content)
-        return Primer(title="primer", message=message).model_dump()
+        return Primer(title="primer", message=message).model_dump_json()
 
-    def verify_role(self, role):
-        try:
-            if not role:
-                role = RoleOptions.USER
-            if role == "user":
-                return RoleOptions.USER
-            if role == "assistant":
-                return RoleOptions.ASSISTANT
-            if role == "system":
-                return RoleOptions.SYSTEM
-        except Exception as e:
-            raise ValueError(f"Role {role} is not valid: {e}")
-
-
-def main():
-    return CreateMessage()
-
-
-if __name__ == "__main__":
-    main()
+    def verify_role(self, role) -> RoleOptions:
+        if role == "user":
+            return RoleOptions.USER
+        if role == "assistant":
+            return RoleOptions.ASSISTANT
+        if role == "system":
+            return RoleOptions.SYSTEM
+        else:
+            return RoleOptions.USER

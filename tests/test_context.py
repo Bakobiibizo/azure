@@ -1,45 +1,42 @@
+import os
 import json
 import unittest
-
-from src.messages.context import ContextWindow
+from src.messages.context import ContextWindow, Message
 
 
 class TestContextWindow(unittest.TestCase):
     def setUp(self):
         self.context_window = ContextWindow()
+        self.sample_message = Message(role="user", content="Hello, world!")
 
-    def tearDown(self):
-        pass
-
-    def test_add_context(self):
-        message = {"key": "value"}
-        self.context_window.add_context(message)
-        self.assertEqual(self.context_window.context[-1], message)
+    def test_add_message(self):
+        initial_length = len(self.context_window.context)
+        self.context_window.add_message(self.sample_message)
+        self.assertEqual(len(self.context_window.context), initial_length + 1)
+        self.assertEqual(self.context_window.context[-1], self.sample_message)
 
     def test_save_history(self):
-        message = {"key": "value"}
-        self.context_window.save_history(message)
+        self.context_window.add_message(self.sample_message)
+        self.context_window.save_history(self.sample_message)
         with open(self.context_window.history_path, "r") as f:
-            saved_message = json.load(f)
-        self.assertEqual(saved_message, message)
+            history = json.load(f)
+        self.assertEqual(len(history), len(self.context_window.context))
+        self.assertEqual(history[-1], self.sample_message.model_dump())
 
-    def test_load_history(self):
-        message = {"key": "value"}
+    def test_get_recent_messages(self):
+        self.context_window.context.extend([self.sample_message] * 10)
+        recent_messages = self.context_window.get_recent_messages(5)
+        self.assertEqual(len(recent_messages), 5)
+        self.assertEqual(recent_messages[0], self.sample_message)
+
+    def test_create_context(self):
+        self.context_window.create_context(content="Hello, world!")
+        self.assertEqual(self.context_window.context[-1], '{"role":"user","content":"Hello, world!"}')
+
+    def tearDown(self):
+        # Clean up the history file after each test
         with open(self.context_window.history_path, "w") as f:
-            json.dump([message], f)
-        loaded_history = self.context_window.load_history(1)
-        self.assertEqual(loaded_history, [message])
-
-    def test_save_primer(self):
-        message = {"key": "value"}
-        self.context_window.save_primer(message)
-        with open(self.context_window.primer_path, "r") as f:
-            saved_message = json.load(f)
-        self.assertEqual(saved_message, message)
-
-    def test_load_primer(self):
-        with self.assertRaises(NotImplementedError):
-            self.context_window.load_primer("primer_choice")
+            json.dump([], f)
 
 
 if __name__ == "__main__":

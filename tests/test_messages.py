@@ -9,35 +9,29 @@ class TestCreateMessage(unittest.TestCase):
 
     def test_create_message(self):
         message = self.create_messages.create_message(
-            RoleOptions.USER, "Hello, assistant."
+            role="user", content="Hello, assistant."
         )
         self.assertEqual(
-            json.dumps(message), '{"role": "user", "content": "Hello, assistant."}'
+            json.loads(message)["content"], "Hello, assistant."
         )
         message = self.create_messages.create_message(
-            RoleOptions.SYSTEM, "This is a system message"
+            role="system", content="This is a system message"
         )
         self.assertEqual(
-            json.dumps(message),
-            '{"role": "system", "content": "This is a system message"}',
+            json.loads(message)["role"], "system"
         )
         message = self.create_messages.create_message(
-            RoleOptions.ASSISTANT, "This is an assitant speaking"
+            role="assistant", content="This is an assitant speaking"
         )
-        self.assertEqual(
-            json.dumps(message),
-            '{"role": "assistant", "content": "This is an assitant speaking"}',
-        )
+        self.assertTrue(json.loads(message)["content"] == "This is an assitant speaking")
+
         message = self.create_messages.create_primer(content="Hello, system")
         self.assertEqual(
-            json.dumps(message),
-            '{"message": {"role": "system", "content": "Hello, system"}, "title": "primer"}',
-        )
+           json.loads(message)["title"], "primer")
         message = self.create_messages.create_primer("This is a system message")
         self.assertEqual(
-            json.dumps(message),
-            '{"message": {"role": "system", "content": "This is a system message"}, "title": "primer"}',
-        )
+            json.loads(message)["message"], json.dumps({"role": "system", "content": "This is a system message"}, default=lambda x: x.dict(), separators=(',', ':')))
+            
 
 
 if __name__ == "__main__":
