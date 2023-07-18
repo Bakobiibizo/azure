@@ -14,7 +14,7 @@ class OpenAITextGeneration:
     def send_chat_complete(self, messages):
         try:
             response = openai.ChatCompletion.create(
-                model="gpt-4", messages=messages, stream=True
+                model="gpt-3.5-turbo", messages=messages, stream=True
             )
             return response
         except ConnectionError as e:

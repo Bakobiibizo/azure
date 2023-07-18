@@ -1,5 +1,5 @@
 import base64
-from typing import List, Dict, Optional
+from typing import List, Optional
 from src.generation.openai_text import OpenAITextGeneration
 from src.messages.context import ContextWindow
 from src.messages.create_messages import CreateMessage, Message
@@ -24,7 +24,7 @@ class DataHandler:
                 role=role, content=content
             )
             self.context = self.context_window.add_message(message)
-        response: OpenAIObject = self.openai_text.send_chat_complete(self.context)
+        response: OpenAIObject = list(self.openai_text.send_chat_complete(self.context), None)
         return response
     
     def handle_ai_chat(self, message: Message) -> None:

@@ -1,1 +1,1 @@
-__all__ = ["openai_text"]
+__all__ = ["openai_text", "plugins"]

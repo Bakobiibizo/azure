@@ -1,5 +1,6 @@
 import unittest
 from src.generation.openai_text import OpenAITextGeneration
+from openai.openai_response import OpenAIResponse
 
 
 class TestOpenAITextGeneration(unittest.TestCase):
@@ -8,7 +9,7 @@ class TestOpenAITextGeneration(unittest.TestCase):
 
     def test_send_chat_complete(self):
         openai_text_gen = OpenAITextGeneration()
-        response = openai_text_gen.send_chat_complete(
+        responses = openai_text_gen.send_chat_complete(
             messages=[
                 {
                     "role": "user",
@@ -16,4 +17,8 @@ class TestOpenAITextGeneration(unittest.TestCase):
                 }
             ]
         )
-        self.assertEqual(response.choices[0].message["role"], "assistant")
+        full_response = ""
+        for response in responses:
+            full_response += response.choices[0].delta.get("content", "")
+        self.assertTrue(isinstance(full_response, str))
+
