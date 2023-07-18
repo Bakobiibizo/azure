@@ -23,7 +23,7 @@ class Context(BaseModel):
 
 class ContextWindow(Context):
 
-    def load_history(self, primer_choice: Optional[int] = 8) -> List[Message] | None:
+    def load_history(self, primer_choice: Optional[int] = 8) -> List[Message]:
         self.context_length = primer_choice + 2
         with open(self.history_path, "r") as f:
             history = json.loads(f.read())
