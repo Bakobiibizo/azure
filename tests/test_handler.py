@@ -1,4 +1,5 @@
 import unittest
+import json
 from src.data_handler import DataHandler
 
 
@@ -10,4 +11,4 @@ class TestCreateMessage(unittest.TestCase):
 
     def test_handle_message(self):
         response = self.handler.handle_chat(role="user", content="hello, how are you?")
-        self.assertEqual(response["role"], "assistant")
+        self.assertEqual(response.choices[0]["message"]["role"], "assistant")

@@ -1,6 +1,9 @@
+from typing import List, Dict
 from src.generation.openai_text import OpenAITextGeneration
 from src.messages.context import ContextWindow
+from src.messages.create_messages import CreateMessage
 import base64
+import json
 
 
 class DataHandler:
@@ -9,19 +12,21 @@ class DataHandler:
         self.context_window = ContextWindow()
         self.image_path = persona_image
         self.context = self.context_window.context
+        self.create_messages = CreateMessage()
 
-    def handle_chat(self, content, role=None, context_window=None, primer_choice=None):
+    def handle_chat(self, role, content, context_window=None, primer_choice=None):
         if not self.context:
             self.context = self.context_window.create_context(
-                role, content, primer_choice, context_window
-            )
+                role=role, content=content, context_window=context_window, primer_choice=primer_choice
+                )
         else:
-            self.context = self.context_window.add_context(content)
+            message = self.create_messages.create_message(
+                role=role, content=content
+            )
+            self.context = self.context_window.add_message(message)
         print(self.context)
-        response = self.openai_text.send_chat_complete(self.context).choices[0][
-            "message"
-        ]
-        self.context_window.save_history(response)
+        response = self.openai_text.send_chat_complete(self.context)
+        self.context_window.save_history(response.choices[0]["message"])
         return response
 
     def handle_image(self):

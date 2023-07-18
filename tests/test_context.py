@@ -1,4 +1,3 @@
-import os
 import json
 import unittest
 from src.messages.context import ContextWindow, Message
@@ -30,8 +29,8 @@ class TestContextWindow(unittest.TestCase):
         self.assertEqual(recent_messages[0], self.sample_message)
 
     def test_create_context(self):
-        self.context_window.create_context(content="Hello, world!")
-        self.assertEqual(self.context_window.context[-1], '{"role":"user","content":"Hello, world!"}')
+        self.context_window.create_context(role="user", content="Hello, world!")
+        self.assertEqual(self.context_window.context[-1], { 'role': 'user', 'content': 'Hello, world!' })
 
     def tearDown(self):
         # Clean up the history file after each test
