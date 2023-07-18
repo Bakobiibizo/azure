@@ -18,26 +18,31 @@ class Context(BaseModel):
     context: List[Message] = []
     history_path: FilePath = "src/static/message_history/message_history.json"
     primer_path: FilePath = "src/static/primers/primers.json"
-
+    context_length: int = 10
 
 
 class ContextWindow(Context):
-    @field_validator("context", check_fields=True, )
-    def load_history(cls, v, values):
-        if "history_path" in values:
-            history_path = values["history_path"]
-            if os.path.exists(history_path) and os.path.getsize(history_path) > 0:
-                with open(history_path, "r") as f:
-                    return json.loads(f.read())
-        return v or []
 
+    def load_history(self, primer_choice: Optional[int] = 8) -> List[Message] | None:
+        self.context_length = primer_choice + 2
+        with open(self.history_path, "r") as f:
+            history = json.loads(f.read())
+        if len(history) == 0: pass
+        if len(history) <= primer_choice:
+            return history
+        else:
+            return history[-primer_choice:]
 
     def add_message(self, message: Message) -> List[Message]:
         self.context.append(message)
+        self.check_context_length(self.context)
         self.save_history(message)
         return self.context
 
     def save_history(self, message: Message) -> None:
+        with open(self.history_path, "r") as f:
+            history = json.loads(f.read())
+        history.append(message)
         with open(self.history_path, "w") as f:
             f.write(json.dumps(self.context, default=lambda x: x.model_dump()))
 
@@ -67,20 +72,26 @@ class ContextWindow(Context):
         primer_choice = primer_choice or 0
 
         primer = self.load_primer(primer_choice)
-        history = self.get_recent_messages(context_window)
+        history = self.load_history(context_window)
         create_message = CreateMessage()
         user_message = create_message.create_message(role, content)
         self.save_history(user_message)
         self.context.append(primer)
         self.context.extend(history)
         self.context.append(json.loads(user_message))
+        self.check_messages(self.context)
 
         print(self.context)
         return self.context
 
-    def check_messages(self, message: Message) -> List[Message]:
-        for message in self.context:
-            if not isinstance(message, Message):
-                self.context.remove(message)
-            print(message)
-        return self
+    def check_messages(self, messages: List[Message]) -> List[Message]:
+        for message in messages:
+            if not message["content"]:
+                messages.remove(message)
+        return messages
+
+    def check_context_length(self, messages: List[Message]) -> List[Message]:
+        if len(messages) > self.context_length:
+            return messages[-self.context_length:]
+        else:
+            return messages
