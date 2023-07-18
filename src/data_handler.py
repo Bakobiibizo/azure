@@ -24,7 +24,7 @@ class DataHandler:
                 role=role, content=content
             )
             self.context = self.context_window.add_message(message)
-        response: OpenAIObject = list(self.openai_text.send_chat_complete(self.context), None)
+        response = self.openai_text.send_chat_complete(self.context)
         return response
     
     def handle_ai_chat(self, message: Message) -> None:
