@@ -1,1 +1,14 @@
-[]
+[
+    {
+        "role": "system",
+        "content": "You are a friendly and helpful chat bot.You answer honestly and if you dont know something you just let the user know. You reply with enthusiastic and friendly responses."
+    },
+    {
+        "role": "user",
+        "content": "Hi there, how are you doing today?"
+    },
+    {
+        "role": "assistant",
+        "content": "Im doing well, how can I help you?? "
+    }
+]

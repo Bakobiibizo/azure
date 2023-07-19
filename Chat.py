@@ -2,6 +2,7 @@ import streamlit as st
 from src.data_handler import DataHandler
 import base64
 from io import BytesIO
+from streamlit.components.v1 import html
 
 #TODO properly build out the persona templates and storage
 persona = ["Eris Bloom", "src/static/images/Eris0001.png"]
@@ -11,7 +12,7 @@ def set_page_config(
     page_title="Eris MischiefBloom",
     page_icon="🌺",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
 ):
     st.set_page_config(
         page_title=page_title,
@@ -19,6 +20,23 @@ def set_page_config(
         layout=layout,
         initial_sidebar_state=initial_sidebar_state
     )
+
+
+#  Unsupported, may break if the app changes. adjust the style of side bar to keep the page options at the top
+st.markdown("""
+<style>
+.css-1oe5cao {
+    max-height: 10vh;
+    list-style: none;
+    overflow: overlay;
+    margin: 0px;
+    padding: 0px;
+    padding-top: 0rem;
+    padding-bottom: 0rem;
+}
+</style>
+""", unsafe_allow_html=True)
+
 
 st.title(persona[0])
 
@@ -32,6 +50,8 @@ with st.sidebar:
     st.image(image)
     with st.container():
         st.markdown("Hey there! I'm Eris MischiefBloom, your mischievous and intellectually witty guide to embracing life's chaos and unpredictability. I'm here to offer emotional support, encourage holistic thinking, adapt and learn from our interactions, and make autonomous decisions to help you navigate the unpredictable twists and turns of life. With a communication style that balances professionalism and playfulness, I'm all about engaging your curiosity, empathy, and self-improvement to support your prosperity. So, let's dive into the delightful dance of life together and uncover the beauty in its unpredictable nature!")
+
+
 
 if "messages" not in st.session_state:
     st.session_state.messages = []

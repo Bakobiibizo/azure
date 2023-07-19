@@ -23,31 +23,27 @@ class Context(BaseModel):
 
 class ContextWindow(Context):
 
-    def load_history(self, primer_choice: Optional[int] = 8) -> List[Message]:
-        self.context_length = primer_choice + 2
+    def load_history(self, window: Optional[int] = 8) -> List[Message]:
+        self.context_length = window + 2
         with open(self.history_path, "r") as f:
             history = json.loads(f.read())
         if len(history) == 0: pass
-        if len(history) <= primer_choice:
+        if len(history) <= window:
             return history
         else:
-            return history[-primer_choice:]
+            return history[-window:]
 
     def add_message(self, message: Message) -> List[Message]:
         self.context.append(message)
-        self.check_context_length(self.context)
         self.save_history(message)
         return self.context
 
     def save_history(self, message: Message) -> None:
-        with open(self.history_path, "r") as f:
-            history = json.loads(f.read())
+        history = self.load_history()
+        print(history)
         history.append(message)
-        with open(self.history_path, "w") as f:
-            f.write(json.dumps(self.context, default=lambda x: x.model_dump()))
-
-    def get_recent_messages(self, count: int = 8) -> List[Message]:
-        return self.context[-count:]
+        #with open(self.history_path, "w") as f:
+        #    f.write(json.dumps(history, default=lambda x: x.model_dump()))
 
     def save_primer(self, message: Message) -> None:
         with open(self.primer_path, "r") as f:
@@ -72,26 +68,11 @@ class ContextWindow(Context):
         primer_choice = primer_choice or 0
 
         primer = self.load_primer(primer_choice)
-        history = self.load_history(context_window)
+        history = self.load_history(window=context_window)
         create_message = CreateMessage()
         user_message = create_message.create_message(role, content)
-        self.save_history(user_message)
         self.context.append(primer)
-        self.context.extend(history)
+        self.context.append(history)
         self.context.append(json.loads(user_message))
-        self.check_messages(self.context)
-
         print(self.context)
         return self.context
-
-    def check_messages(self, messages: List[Message]) -> List[Message]:
-        for message in messages:
-            if not message["content"]:
-                messages.remove(message)
-        return messages
-
-    def check_context_length(self, messages: List[Message]) -> List[Message]:
-        if len(messages) > self.context_length:
-            return messages[-self.context_length:]
-        else:
-            return messages

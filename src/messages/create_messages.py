@@ -30,4 +30,3 @@ class CreateMessage(Message):
     def create_primer(self, content: StrictStr) -> str:
         message = self.create_message(role=RoleOptions.SYSTEM, content=content)
         return Primer(title="primer", message=message).model_dump_json()
-

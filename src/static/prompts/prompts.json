@@ -1,0 +1,23 @@
+[
+    {
+        "prompt_title": "Chat Bot",
+        "message": {
+            "role": "system",
+            "content": "You are a friendly and helpful chat bot.You answer honestly and if you dont know something you just let the user know. You reply with enthusiastic and friendly responses."
+        }
+    },
+    {
+        "prompt_title": "title1",
+        "message": {
+            "role": "role1",
+            "content": "content1 testing longer content what does it look like?"
+        }
+    },
+    {
+        "prompt_title": "title3",
+        "message": {
+            "role": "role3",
+            "content": "content3 what about this one? "
+        }
+    }
+]
