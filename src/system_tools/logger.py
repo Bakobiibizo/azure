@@ -34,6 +34,7 @@ class LocalLogger:
             logging.error(msg)
         else:
             logging.debug(msg)
+        logging.getLogger().handlers[0].flush()
 
 class HttpLogger:
     def __init__(self, config):
