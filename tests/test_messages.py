@@ -14,14 +14,15 @@ from src.messages.message_defs import (
 
 
 class TestMessages:
-    messages = Messages()
-    message_type = MessageType
+    def setup(self):
+        self.messages = Messages()
+        self.message_type = MessageType
 
     @hyp.given(role=sampled_from(elements=list(RoleOptions)), content=text(min_size=1, max_size=100))
     def test_create_message(self, role, content) -> None:
         created_message = self.messages.create_message(role=role, content=content)
-        assert role in RoleOptions
-        assert isinstance(content, str)
+        assert created_message.role == role
+        assert created_message.content == content
         assert isinstance(created_message, Message)
 
     def test_message_to_json(self):
@@ -29,11 +30,15 @@ class TestMessages:
         message = Message(message=created_message)
         json_str = self.messages.message_to_json(message)
         assert isinstance(json_str, str)
+        assert json.loads(json_str)["role"] == RoleOptions.USER.value
+        assert json.loads(json_str)["content"] == "test"
 
     def test_json_to_message(self):
         json_str = '{"role": "user", "content": "test"}'
         message = self.messages.json_to_message(json_str)
         assert isinstance(message, Message)
+        assert message.role == RoleOptions.USER
+        assert message.content == "test"
 
     def test_history_message_to_json(self):
         created_message = self.messages.create_message(role=RoleOptions.USER, content="test")
