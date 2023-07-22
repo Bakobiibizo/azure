@@ -3,7 +3,15 @@ from src.messages.message_defs import (
     RoleOptions
 )
 import json
+from json.encoder import JSONEncoder
+from src.system_tools.logger import LoggerInstance
 
+instance = LoggerInstance()
+logger = instance.get_logger()
+logger.log("Initialized create_message:\n")
+
+
+encoder = JSONEncoder(sort_keys=True,ensure_ascii=True)
 
 class Messages:
     def __init__(self):
@@ -12,34 +20,44 @@ class Messages:
     def create_message(self, role: RoleOptions, content: str) -> Message:
         return Message(role=role, content=content)
 
-    def prompts_to_json(self, prompts: list) -> str:
+    def prompt_message_to_json(self, prompts: list) -> str:
         return json.dumps(prompts)
 
-    def json_to_prompts(self, json_str: str) -> list:
+    def json_to_prompt_message(self, json_str: str) -> list:
         return json.loads(json_str)
 
-    def chains_to_json(self, chains: list) -> str:
+    def prompt_chain_message_to_json(self, chains: list) -> str:
         return json.dumps(chains)
 
-    def json_to_chains(self, json_str: str) -> list:
+    def json_to_prompt_chain_message(self, json_str: str) -> list:
         return json.loads(json_str)
 
-    def primers_to_json(self, primers: list) -> str:
+    def primer_message_to_json(self, primers: list) -> str:
         return json.dumps(primers)
 
-    def json_to_primers(self, json_str: str) -> list:
+    def json_to_primer_message(self, json_str: str) -> list:
         return json.loads(json_str)
 
-    def personas_to_json(self, personas: list) -> str:
+    def persona_message_to_json(self, personas: list) -> str:
         return json.dumps(personas)
 
-    def json_to_personas(self, json_str: str) -> list:
+    def json_to_persona_message(self, json_str: str) -> list:
         return json.loads(json_str)
 
-    def message_history_to_json(self, message_history: list) -> str:
-        return json.dumps(message_history)
+    def history_message_to_json(self, message_history: list) -> str:
+        for message in message_history:
+            try:
+                iterable = iter(message)
+            except TypeError:
+                pass
+            else: 
+                return list(iterable)
+            logger.log(message[1], message[0])
 
-    def json_to_message_history(self, json_str: str) -> list:
+        
+
+
+    def json_to_history_message(self, json_str: str) -> list:
         return json.loads(json_str)
 
     def message_to_json(self, message: dict) -> str:
