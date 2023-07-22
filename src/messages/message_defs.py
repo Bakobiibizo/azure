@@ -29,8 +29,14 @@ class StoredMessage(BaseModel):
             MessageType: lambda v: v.value,
         }
 
+from pydantic import validator
+
 class HistoryMessages(StoredMessage):
-    message_type: MessageType.HISTORY_MESSAGE
+    message_type: str
+
+    @validator('message_type', pre=True, always=True)
+    def set_message_type(cls, v):
+        return MessageType.HISTORY_MESSAGE.value
 
 class PrimerMessage(StoredMessage):
     message_type: MessageType.PRIMER_MESSAGE
