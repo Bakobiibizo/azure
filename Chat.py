@@ -1,8 +1,6 @@
 import streamlit as st
-from src.data_handler import DataHandler
 import base64
 from io import BytesIO
-from streamlit.components.v1 import html
 
 #TODO properly build out the persona templates and storage
 persona = ["Eris Bloom", "src/static/images/Eris0001.png"]
@@ -53,6 +51,9 @@ with st.sidebar:
 
 
 
+context = ContextWindow(context_length=4).context
+create_message = CreateMessage()
+
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
@@ -60,8 +61,10 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-if prompt := st.chat_input("prompt"):
-    state_message = st.session_state.messages.append({"role": "user", "content": prompt})
+if prompt := st.chat_input("Enter message:"):
+    user_message = create_message.create_message(Role.USER, user_input)
+    st.session_state.messages.append(user_message)
+    context.add_message(user_message)
     with st.chat_message("user"):
         st.markdown(prompt)
 

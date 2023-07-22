@@ -1,6 +1,5 @@
 import unittest
 from src.generation.openai_text import OpenAITextGeneration
-from openai.openai_response import OpenAIResponse
 
 
 class TestOpenAITextGeneration(unittest.TestCase):

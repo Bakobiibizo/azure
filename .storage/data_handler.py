@@ -1,7 +1,7 @@
 import base64
 from typing import List, Optional
 from src.generation.openai_text import OpenAITextGeneration
-from src.messages.context import ContextWindow
+from src.messages.objects.context import ContextWindow
 from src.messages.create_messages import CreateMessage, Message
 from openai.openai_object import OpenAIObject
 

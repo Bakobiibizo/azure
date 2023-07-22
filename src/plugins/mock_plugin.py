@@ -1,4 +1,4 @@
-from plugins.plugin import Plugin
+from src.plugins.plugin import Plugin
 
 
 class MockPlugin(Plugin):

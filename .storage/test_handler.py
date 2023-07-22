@@ -1,11 +1,8 @@
 import unittest
 import base64
 import json
-from typing import List
-from src.data_handler import DataHandler
-from openai.openai_response import OpenAIResponse
+from storage.data_handler import DataHandler
 from src.generation.openai_text import OpenAITextGeneration
-from src.messages.context import ContextWindow
 
 
 class TestCreateMessage(unittest.TestCase):

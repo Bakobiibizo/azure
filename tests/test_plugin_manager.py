@@ -1,6 +1,6 @@
 import unittest
-from plugins.mock_plugin import MockPlugin
-from plugins.plugin_manager import PluginManager
+from src.plugins.mock_plugin import MockPlugin
+from src.plugins.plugin_manager import PluginManager
 
     
 class test_plugin_manager(unittest.TestCase):
