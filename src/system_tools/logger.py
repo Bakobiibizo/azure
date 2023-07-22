@@ -23,20 +23,22 @@ class LoggerConfig(BaseModel):
 class LocalLogger:
     def __init__(self, config):
         self.config = config
+        self.logger = logging.getLogger(__name__)
         handler = logging.FileHandler(self.config.log_file)
-        logging.getLogger().addHandler(handler)
+        self.logger.addHandler(handler)
 
     def log(self, msg, level='info'):
         print(f"Logging message: {msg} at level: {level}")  # Debug print statement
         if level == 'info':
-            logging.info(msg)
+            self.logger.info(msg)
         elif level == 'warning':
-            logging.warning(msg)
+            self.logger.warning(msg)
         elif level == 'error':
-            logging.error(msg)
+            self.logger.error(msg)
         else:
-            logging.debug(msg)
-        logging.getLogger().handlers[0].flush()
+            self.logger.debug(msg)
+        for handler in self.logger.handlers:
+            handler.flush()
 
 class HttpLogger:
     def __init__(self, config):
