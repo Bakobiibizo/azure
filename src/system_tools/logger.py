@@ -23,7 +23,8 @@ class LoggerConfig(BaseModel):
 class LocalLogger:
     def __init__(self, config):
         self.config = config
-        logging.basicConfig(filename=self.config.log_file) 
+        handler = logging.FileHandler(self.config.log_file)
+        logging.getLogger().addHandler(handler)
 
     def log(self, msg, level='info'):
         print(f"Logging message: {msg} at level: {level}")  # Debug print statement
