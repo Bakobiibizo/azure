@@ -26,6 +26,7 @@ class LocalLogger:
         logging.basicConfig(filename=self.config.log_file) 
 
     def log(self, msg, level='info'):
+        print(f"Logging message: {msg} at level: {level}")  # Debug print statement
         if level == 'info':
             logging.info(msg)
         elif level == 'warning':
