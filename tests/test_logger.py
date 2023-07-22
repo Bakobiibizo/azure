@@ -9,10 +9,13 @@ def test_http_logger():
     logger.log('test')
     assert len(responses.calls) == 1
 
+import time
+
 def test_local_logger():
     log_file = "tests/json_test_files/test_log.log"
     config = LoggerConfig(log_file=log_file, logging_mode='local', mode='a')
     logger = LoggerInstance(log_file=config.log_file, logging_mode=config.logging_mode) 
     logger.log('test')
+    time.sleep(1)  # wait for the log message to be written
     with open(log_file, 'r') as f:
         assert 'test' in f.read()
