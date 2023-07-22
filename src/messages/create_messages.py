@@ -8,7 +8,7 @@ from src.system_tools.logger import LoggerInstance
 
 instance = LoggerInstance()
 logger = instance.get_logger()
-logger.log("Initialized create_message:\n")
+logger.log("Initialized create_message.py")
 
 
 encoder = JSONEncoder(sort_keys=True,ensure_ascii=True)

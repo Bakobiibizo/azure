@@ -16,7 +16,7 @@ from src.messages.message_defs import (
 )
 instance = LoggerInstance()
 logger = instance.get_logger()
-logger.log("Initialized test_messages:\n")
+logger.log("Initialized test_messages.py:")
 
 class TestMessages:
     def setup_method(self):
