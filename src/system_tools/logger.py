@@ -21,13 +21,19 @@ class LoggerConfig(BaseModel):
             raise ValueError('url required for http logging_mode')
         return value
 
+import sys
+
 class LocalLogger:
     def __init__(self, config):
         self.config = config
         self.logger = logging.getLogger(__name__)
         self.mode = self.config.mode
         handler = logging.FileHandler(filename=self.config.log_file, mode=self.mode)
+        handler.setLevel(logging.INFO)  # set handler level
         self.logger.addHandler(handler)
+        self.logger.setLevel(logging.INFO)  # set logger level
+        stream_handler = logging.StreamHandler(sys.stdout)  # create stream handler
+        self.logger.addHandler(stream_handler)  # add stream handler to the logger
 
 
     def log(self, msg, level='info'):
