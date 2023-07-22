@@ -58,8 +58,14 @@ class Logger:
 
     def log(self, msg, level='info'):
         self.logger.log(msg, level)
-        
-def get_logger(log_file, mode, url=None, level='info'):
-    config = LoggerConfig(log_file=log_file, mode=mode, url=url)
-    logger = Logger(config)
-    return logger.log(level)
+
+class LoggerInstance:
+    def __init__(self, log_file, mode, url=None, level='info'):
+        config = LoggerConfig(log_file=log_file, mode=mode, url=url)
+        self.logger = Logger(config)
+
+    def get_logger(self):
+        return self.logger
+
+    def log(self, msg, level='info'):
+        self.logger.log(msg, level)
