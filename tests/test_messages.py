@@ -28,7 +28,9 @@ class TestMessages:
         assert isinstance(created_message, Message)
 
     def test_message_to_json(self):
-        message = HistoryMessages(message=Message(role=RoleOptions.USER, content="test"), message_type=MessageType.HISTORY_MESSAGE)
+        created_message = self.messages.create_message(role=RoleOptions.USER, content="test")
+        message_type = MessageType.HISTORY_MESSAGE
+        message = HistoryMessages(message=created_message, message_type=message_type)
         json_str = self.messages.message_to_json(message)
         assert isinstance(json_str, str)
 
