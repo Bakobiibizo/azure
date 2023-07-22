@@ -34,11 +34,72 @@ class TestMessages:
         json_str = self.messages.message_to_json(message)
         assert isinstance(json_str, str)
 
-    def test_json_to_message(self):
-        json_str = '{"message": {"role": "user", "content": "test"}, "message_type": "history_message"}'
-        message = self.messages.json_to_message(json_str, MessageType.HISTORY_MESSAGE)
-        assert isinstance(message, HistoryMessages)
+    def test_stored_message_to_json(self):
+        created_message = self.messages.create_message(role=RoleOptions.USER, content="test")
+        message = StoredMessage(message=created_message)
+        json_str = self.messages.stored_message_to_json(message)
+        assert isinstance(json_str, str)
+
+    def test_json_to_stored_message(self):
+        json_str = '{"message": {"role": "user", "content": "test"}}'
+        message = self.messages.json_to_stored_message(json_str)
+        assert isinstance(message, StoredMessage)
         assert message.message.role == RoleOptions.USER
         assert message.message.content == "test"
-        assert message.message_type == MessageType.HISTORY_MESSAGE
+
+    def test_primer_message_to_json(self):
+        created_message = self.messages.create_message(role=RoleOptions.USER, content="test")
+        message = PrimerMessage(message=created_message, message_title="test title")
+        json_str = self.messages.primer_message_to_json(message)
+        assert isinstance(json_str, str)
+
+    def test_json_to_primer_message(self):
+        json_str = '{"message": {"role": "user", "content": "test"}, "message_title": "test title"}'
+        message = self.messages.json_to_primer_message(json_str)
+        assert isinstance(message, PrimerMessage)
+        assert message.message.role == RoleOptions.USER
+        assert message.message.content == "test"
+        assert message.message_title == "test title"
+
+    def test_prompt_message_to_json(self):
+        created_message = self.messages.create_message(role=RoleOptions.USER, content="test")
+        message = PromptMessage(message=created_message, message_title="test title")
+        json_str = self.messages.prompt_message_to_json(message)
+        assert isinstance(json_str, str)
+
+    def test_json_to_prompt_message(self):
+        json_str = '{"message": {"role": "user", "content": "test"}, "message_title": "test title"}'
+        message = self.messages.json_to_prompt_message(json_str)
+        assert isinstance(message, PromptMessage)
+        assert message.message.role == RoleOptions.USER
+        assert message.message.content == "test"
+        assert message.message_title == "test title"
+
+    def test_prompt_chain_message_to_json(self):
+        created_message = self.messages.create_message(role=RoleOptions.USER, content="test")
+        message = PromptChainMessage(message=created_message, message_title="test title", message_description="test description")
+        json_str = self.messages.prompt_chain_message_to_json(message)
+        assert isinstance(json_str, str)
+
+    def test_json_to_prompt_chain_message(self):
+        json_str = '{"message": {"role": "user", "content": "test"}, "message_title": "test title", "message_description": "test description"}'
+        message = self.messages.json_to_prompt_chain_message(json_str)
+        assert isinstance(message, PromptChainMessage)
+        assert message.message.role == RoleOptions.USER
+        assert message.message.content == "test"
+        assert message.message_title == "test title"
+        assert message.message_description == "test description"
+
+    def test_persona_message_to_json(self):
+        created_message = self.messages.create_message(role=RoleOptions.USER, content="test")
+        message = PersonaMessage(message=created_message)
+        json_str = self.messages.persona_message_to_json(message)
+        assert isinstance(json_str, str)
+
+    def test_json_to_persona_message(self):
+        json_str = '{"message": {"role": "user", "content": "test"}}'
+        message = self.messages.json_to_persona_message(json_str)
+        assert isinstance(message, PersonaMessage)
+        assert message.message.role == RoleOptions.USER
+        assert message.message.content == "test"
 
