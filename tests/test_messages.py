@@ -97,9 +97,10 @@ class TestMessages:
         assert isinstance(json_str, str)
 
     def test_json_to_persona_message(self):
-        json_str = '{"message": {"role": "user", "content": "test"}}'
+        json_str = '{"message": {"role": "user", "content": "test"}, "message_type": "persona_message"}'
         message = self.messages.json_to_persona_message(json_str)
         assert isinstance(message, PersonaMessage)
         assert message.message.role == RoleOptions.USER
         assert message.message.content == "test"
+        assert message.message_type == MessageType.PERSONA_MESSAGE
 
