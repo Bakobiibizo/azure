@@ -4,28 +4,31 @@ import logging
 import requests
 
 class LoggerConfig(BaseModel):
-    mode: Optional[str] = "local" 
+    logging_mode: Optional[str] = "local" 
     log_file: Optional[str] = "src/static/log/app.log"
     url: Optional[str] = None
+    mode: Optional[str] = "a"
 
-    @validator('mode')
+    @validator('logging_mode')
     def validate_mode(cls, value):
         if value not in ['local', 'http']:
-            raise ValueError('mode must be local or http')
+            raise ValueError('logging_mode must be local or http')
         return value
 
     @validator('url')
     def validate_url(cls, value, values):
-        if values['mode'] == 'http' and not value:
-            raise ValueError('url required for http mode')
+        if values['logging_mode'] == 'http' and not value:
+            raise ValueError('url required for http logging_mode')
         return value
 
 class LocalLogger:
     def __init__(self, config):
         self.config = config
         self.logger = logging.getLogger(__name__)
-        handler = logging.FileHandler(self.config.log_file)
+        self.mode = self.config.mode
+        handler = logging.FileHandler(filename=self.config.log_file, mode=self.mode)
         self.logger.addHandler(handler)
+
 
     def log(self, msg, level='info'):
         print(f"Logging message: {msg} at level: {level}")  # Debug print statement
@@ -51,12 +54,12 @@ class HttpLogger:
 class Logger:
     def __init__(self, config):
         self.config = config
-        if self.config.mode == 'local':
+        if self.config.logging_mode == 'local':
             self.logger = LocalLogger(config)
-        elif self.config.mode == 'http':
+        elif self.config.logging_mode == 'http':
             self.logger = HttpLogger(config)
         else:
-            raise ValueError('Invalid mode')
+            raise ValueError('Invalid logging_mode')
         self.get()    
     def get(self):
         return self.logger
@@ -65,8 +68,8 @@ class Logger:
         self.logger.log(msg, level)
 
 class LoggerInstance:
-    def __init__(self, log_file, mode, url=None, level='info'):
-        config = LoggerConfig(log_file=log_file, mode=mode, url=url)
+    def __init__(self, log_file, logging_mode, url=None, level='info', mode="a"):
+        config = LoggerConfig(log_file=log_file, logging_mode=logging_mode, url=url, mode="a")
         self.logger = Logger(config)
 
     def get_logger(self):
