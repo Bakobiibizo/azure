@@ -53,7 +53,8 @@ class PromptChainMessage(StoredMessage):
     message_description: StrictStr
 
 class PersonaMessage(StoredMessage):
-    message_type: MessageType.PERSONA_MESSAGE
+    message_type: 'MessageType.PERSONA_MESSAGE'
+PersonaMessage.update_forward_refs()
 
 
 
