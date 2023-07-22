@@ -16,7 +16,7 @@ class MessageType(str, Enum):
     HISTORY_MESSAGE = "history_message"
     PRIMER_MESSAGE = "primer_message"
     PROMPT_MESSAGE = "prompt_message"
-    CHAIN_MESSAGE = "chain_message"
+    PROMPT_CHAIN_MESSAGE = "chain_message"
     PERSONA_MESSAGE = "persona_message"
 
 class StoredMessage(BaseModel):

@@ -15,6 +15,7 @@ from src.messages.message_defs import (
 
 class TestMessages:
     messages = Messages()
+    message_type = MessageType
 
     @hyp.given(role=sampled_from(elements=list(RoleOptions)), content=text(min_size=1, max_size=100))
     def test_create_message(self, role, content) -> None:
