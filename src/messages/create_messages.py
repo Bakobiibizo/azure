@@ -4,11 +4,11 @@ from src.messages.message_defs import (
 )
 import json
 from json.encoder import JSONEncoder
-from src.system_tools.logger import LoggerInstance
+from src.system_tools.logger import Logger, LoggerConfig
 
-instance = LoggerInstance()
-logger = instance.get_logger()
-logger.log("Initialized create_message.py")
+config = LoggerConfig(log_file="src/static/log/app.log", logging_mode="local", url=None, mode="a")
+logger = Logger(config)
+logger.log("Initialized test_messages.py:")
 
 
 encoder = JSONEncoder(sort_keys=True,ensure_ascii=True)

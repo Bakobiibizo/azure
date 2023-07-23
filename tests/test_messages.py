@@ -2,7 +2,7 @@ import json
 import hypothesis as hyp
 from typing import Dict
 from hypothesis.strategies import  sampled_from, text
-from src.system_tools.logger import LoggerInstance
+from src.system_tools.logger import Logger, LoggerConfig
 from src.messages.create_messages import Messages
 from src.messages.message_defs import (
     RoleOptions,
@@ -14,8 +14,8 @@ from src.messages.message_defs import (
     PromptChainMessage,
     PersonaMessage
 )
-instance = LoggerInstance()
-logger = instance.get_logger()
+config = LoggerConfig(log_file="tests/json_test_files/test_log.log", logging_mode="local", url=None, mode="a")
+logger = Logger(config)
 logger.log("Initialized test_messages.py:")
 
 class TestMessages:
