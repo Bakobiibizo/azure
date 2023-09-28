@@ -13,10 +13,9 @@ class OpenAITextGeneration:
 
     def send_chat_complete(self, messages):
         try:
-            response = openai.ChatCompletion.create(
+            return openai.ChatCompletion.create(
                 model="gpt-3.5-turbo", messages=messages, stream=True
             )
-            return response
         except ConnectionError as e:
             print(f"There was an error connecting to OpenAI: {e}")
             raise

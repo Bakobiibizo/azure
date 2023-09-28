@@ -27,11 +27,7 @@ class ContextWindow(Context):
         self.context_length = primer_choice + 2
         with open(self.history_path, "r") as f:
             history = json.loads(f.read())
-        if len(history) == 0: pass
-        if len(history) <= primer_choice:
-            return history
-        else:
-            return history[-primer_choice:]
+        return history if len(history) <= primer_choice else history[-primer_choice:]
 
     def add_message(self, message: Message) -> List[Message]:
         self.context.append(message)

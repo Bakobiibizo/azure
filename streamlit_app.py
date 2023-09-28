@@ -51,7 +51,7 @@ if prompt is not None:
         full_response = ""
         for response in data_handler.handle_chat(content=prompt, role="user"):
             full_response += response.choices[0].delta.get("content", "")
-            message_placeholder.markdown(full_response + "▌")
+            message_placeholder.markdown(f"{full_response}▌")
         message_placeholder.markdown(full_response)
         message = {
         "role": "assistant",
