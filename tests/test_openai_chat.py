@@ -17,8 +17,8 @@ class TestOpenAITextGeneration(unittest.TestCase):
                 }
             ]
         )
-        full_response = ""
-        for response in responses:
-            full_response += response.choices[0].delta.get("content", "")
+        full_response = "".join(
+            response.choices[0].delta.get("content", "") for response in responses
+        )
         self.assertTrue(isinstance(full_response, str))
 

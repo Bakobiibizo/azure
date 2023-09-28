@@ -18,9 +18,9 @@ class TestCreateMessage(unittest.TestCase):
     def test_handle_message(self):
         message = self.handler.create_messages.create_message("user", "Write me a haiku about a duck wearing a fedora")
         responses = list(self.openai_text.send_chat_complete(messages=[json.loads(message)]))
-        full_response = ""
-        for response in responses:
-            full_response += response.choices[0].delta.get("content", "")
+        full_response = "".join(
+            response.choices[0].delta.get("content", "") for response in responses
+        )
         self.assertTrue(isinstance(full_response, str))
 
 
